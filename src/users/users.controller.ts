@@ -15,4 +15,10 @@ export class UsersController {
   async updateUser(@Body() userData: UserData): Promise<object> {
     return await this.usersService.updateUser(userData);
   }
+
+  @Post('/delete')
+  async deleteUser(@Body() email: string): Promise<object> {
+    return await this.usersService.deleteUser(email);
+  }
+  
 }
