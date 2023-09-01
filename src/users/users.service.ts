@@ -37,5 +37,18 @@ export class UsersService {
 
         return result;
     }
+
+    async getAllUsers(): Promise<object[]>  {
+        const users = await this.prisma.user.findMany({
+            include:{
+                role: true,
+                org: true
+            }
+        });
+
+        console.log(users[0].role.name);
+
+        return users;
+    }
     
 }
