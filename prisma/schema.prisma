@@ -10,17 +10,17 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   roleId    Int
-  orgId     Int
+  orgname   String? @unique 
   fname     String
   lname     String
   email     String   @unique
-  password  String
+  password  String  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
   role      Role     @relation(fields: [roleId], references: [id])
-  org       Organization @relation(fields: [orgId], references: [id])
+  
 }
 
 
@@ -34,12 +34,3 @@ model Role {
   users     User[]
 }
 
-model Organization {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  users     User[]
-}

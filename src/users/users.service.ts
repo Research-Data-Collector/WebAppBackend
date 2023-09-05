@@ -1,10 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import e from 'express';
 import { PrismaService } from 'src/prisma.service';
-import { UserData } from 'src/utils/types';
+import {  UserData } from 'src/utils/types';
+import {compare, hash} from 'bcrypt'
+import { User } from '@prisma/client';
+
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private readonly prisma:PrismaService) {}
+
+    async getUser(email:string): Promise<User> {
+
+
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email
+            }
+        });
+
+        if(!user){
+            throw new HttpException('User not found',HttpStatus.UNAUTHORIZED);
+        }
+
+        return user;
+    }
+
+    // async createUser(userDto:CreateUserDto): Promise<any> {
+    //     // Implement Password Hashing.
+        
+
+    //     return await this.prisma.user.create(...userDto);
+         
+
+    // }
+
+
+
+
 
 
     async createUser(userData:UserData): Promise<object> {
@@ -38,11 +71,13 @@ export class UsersService {
         return result;
     }
 
+
+    
+
     async getAllUsers(): Promise<object[]>  {
         const users = await this.prisma.user.findMany({
             include:{
-                role: true,
-                org: true
+                role: true 
             }
         });
 
@@ -50,5 +85,11 @@ export class UsersService {
 
         return users;
     }
+
+   
     
+
+
 }
+
+
