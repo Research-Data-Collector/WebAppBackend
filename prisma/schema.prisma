@@ -15,6 +15,10 @@ model User {
   lname     String
   email     String   @unique
   password  String  
+//later added for email verification
+    
+  isVerified      Boolean? @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

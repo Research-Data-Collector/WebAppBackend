@@ -1,4 +1,4 @@
 export const jwt_config = {
-    secret: 'abcdefghij',
-    expired: 3600,
+    secret: 'thisisthedatacollectionplatform',
+    expired: 86400,
   };

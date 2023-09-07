@@ -1,17 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import e from 'express';
 import { PrismaService } from 'src/prisma.service';
-import {  UserData } from 'src/utils/types';
-import {compare, hash} from 'bcrypt'
+import { UserData, UserDataUpdate } from 'src/utils/types';
+import { compare, hash } from 'bcrypt'
 import { User } from '@prisma/client';
 import { UpdatePasswordDto } from './user.dto';
 
 
 @Injectable()
 export class UsersService {
-    constructor(private readonly prisma:PrismaService) {}
+    constructor(private readonly prisma: PrismaService) { }
 
-    async getUser(email:string): Promise<User> {
+    async getUser(email: string): Promise<User> {
 
 
         const user = await this.prisma.user.findUnique({
@@ -20,38 +20,19 @@ export class UsersService {
             }
         });
 
-        if(!user){
-            throw new HttpException('User not found',HttpStatus.UNAUTHORIZED);
+        if (!user) {
+            throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
         }
 
         return user;
     }
 
-    // async createUser(userDto:CreateUserDto): Promise<any> {
-    //     // Implement Password Hashing.
-        
-
-    //     return await this.prisma.user.create(...userDto);
-         
-
-    // }
 
 
 
+    //use this to let user edit info in profile. handle password change in another method. UI should not allow user to change password in profile
+    async updateUser(userData: UserDataUpdate): Promise<object> {
 
-
-
-    async createUser(userData:UserData): Promise<object> {
-        // Implement Password Hashing.
-
-        const result = await this.prisma.user.create({
-            data: userData
-        });
-
-        return result;
-    }
-//use this to let user edit info in profile. handle password change in another method. UI should not allow user to change password in profile
-    async updateUser(userData:UserData): Promise<object> {
         const result = await this.prisma.user.update({
             where: {
                 email: userData.email
@@ -62,9 +43,9 @@ export class UsersService {
         return result;
     }
 
-//change password second method-working. use this to let user change password in profile. 
-//change email here to id??
-    async updateUserPassword(userData:UpdatePasswordDto,email:string){
+    //change password second method-working. use this to let user change password in profile. 
+    //change email here to id??
+    async updateUserPassword(userData: UpdatePasswordDto, email: string) {
 
         const user = await this.prisma.user.findFirst({
             where: {
@@ -76,62 +57,24 @@ export class UsersService {
             user.password,
         );
 
-        if(!checkPassword){
-            throw new HttpException('Password Incorrect',HttpStatus.UNAUTHORIZED)
+        if (!checkPassword) {
+            throw new HttpException('Password Incorrect', HttpStatus.UNAUTHORIZED)
         }
-        const newPasswordHash = await hash(userData.password,12);
-        const result = await this.prisma.user.update({
+        const newPasswordHash = await hash(userData.password, 12);
+        await this.prisma.user.update({
             where: {
                 email: email
             },
-            data: {password: newPasswordHash}
+            data: { password: newPasswordHash }
         });
 
-        //return checkPassword;
-       // return userData.oldPassword;
-       console.log('userData.oldPassword:', userData.oldPassword);
-console.log('user.password:', user.password);
-
-        return user.password;
+        return {
+            message: 'Password Updated',
+        };
     }
 
 
-///********************************************************************************************************* */
-
-//change password first method-not working
-
-
-    // async updatePassword(userId: number, oldPassword: string, newPassword: string){
-    //     const result = await this.prisma.user.findFirst({
-    //         where: {
-    //             id:userId
-    //         },
-            
-    //     });
-    //     return result;
-
-    //      //compare the password
-
-    //         const checkPassword = await compare(
-    //             oldPassword,
-    //             result.password,
-    //         );
-
-    //         if(!checkPassword){
-    //             throw new HttpException('Password Incorrect',HttpStatus.UNAUTHORIZED)
-    //         }
-    //         const newPasswordHash = await hash(newPassword,12);
-
-    //         await this.prisma.user.update({
-    //             where: {id: userId},
-    //             data: {password: newPasswordHash}
-    //         });
-
-    //         return result;
-    // }
-
-
-    async deleteUser(email:string): Promise<object> {
+    async deleteUser(email: string): Promise<object> {
         const result = await this.prisma.user.delete({
             where: {
                 email: email
@@ -142,12 +85,12 @@ console.log('user.password:', user.password);
     }
 
 
-    
 
-    async getAllUsers(): Promise<object[]>  {
+
+    async getAllUsers(): Promise<object[]> {
         const users = await this.prisma.user.findMany({
-            include:{
-                role: true 
+            include: {
+                role: true
             }
         });
 
@@ -156,8 +99,8 @@ console.log('user.password:', user.password);
         return users;
     }
 
-   
-    
+
+
 
 
 }
