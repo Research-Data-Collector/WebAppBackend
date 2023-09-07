@@ -8,33 +8,93 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  roleId    Int
-  orgname   String? @unique 
-  fname     String
-  lname     String
-  email     String   @unique
-  password  String  
-//later added for email verification
-    
-  isVerified      Boolean? @default(false)
+  id       Int    @id @default(autoincrement())
+  roleId   Int
+  orgId    Int?
+  fname    String
+  lname    String
+  email    String @unique
+  password String
+  //later added for email verification
+
+  isVerified Boolean? @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  role      Role     @relation(fields: [roleId], references: [id])
-  
+  role               Role                 @relation(fields: [roleId], references: [id])
+  emailVerifications EmailVerifications[]
+  organization       Organization?        @relation(fields: [orgId], references: [id])
+
+  adminOrg Organization[] @relation("admin")
+  submissions FormSubmissions[]
 }
 
+model Organization {
+  id      Int    @id @default(autoincrement())
+  orgname String
+  adminId Int    @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users User[]
+  forms Forms[]
+  admin User    @relation("admin", fields: [adminId], references: [id])
+}
+
+model EmailVerifications {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  otp       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+}
 
 model Role {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
+  name      RoleName @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  users     User[]
+  users User[]
 }
 
+enum RoleName {
+  ADMIN
+  USER
+}
+
+model Forms {
+  id    Int    @id @default(autoincrement())
+  orgId Int
+  title String @db.Text
+  data  Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  organization Organization @relation(fields: [orgId], references: [id])
+  formSubmissions FormSubmissions[]
+}
+
+
+model FormSubmissions {
+  id       Int      @id @default(autoincrement())
+  formId   Int
+  userId   Int
+  data     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  form Forms @relation(fields: [formId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
