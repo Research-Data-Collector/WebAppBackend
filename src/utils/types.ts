@@ -7,6 +7,14 @@ export interface UserData {
     password: string;
 }
 
+export interface UserDataUpdate {
+    roleId: number;
+    orgname?: string|null;
+    fname: string;
+    lname: string;
+    email: string;
+}
+
 export interface RoleData {
     name: string;
 }

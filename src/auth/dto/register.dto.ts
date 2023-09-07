@@ -4,6 +4,7 @@ import {
     IsEmail,
     MinLength,
     MaxLength,
+    Matches,
   } from 'class-validator';
   
   export class RegisterDto {
@@ -23,7 +24,8 @@ import {
     @IsString()
     @MinLength(6)
     @MaxLength(20)
-    password: string;
+    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {message: 'password too weak'})
+    password: string; 
 
     roleId: number;
   }
