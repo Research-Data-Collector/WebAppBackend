@@ -1,3 +1,5 @@
+import { RoleName } from "@prisma/client";
+
 export interface UserData {
     roleId: number;
     orgname?: string|null;
@@ -16,5 +18,5 @@ export interface UserDataUpdate {
 }
 
 export interface RoleData {
-    name: string;
+    name: RoleName;
 }

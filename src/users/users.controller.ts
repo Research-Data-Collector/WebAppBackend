@@ -15,12 +15,6 @@ export class UsersController {
 
   
 
-  @Post('/create')
-  @UsePipes(new ValidationPipe())
-  createUser(@Body() userData: UserData){
-    console.log(userData)
-    return this.usersService.createUser(userData);
-  }
 
   @Post('/update') //user can change his name,organization and email
   //should implement the email varification method for change password
