@@ -35,3 +35,24 @@ import {
 //   lname     String
 //   email     String   @unique
 //   password  String
+
+export class ValidationDto {
+  @IsNotEmpty()
+  @IsString()
+  otp: string;
+
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+}
+
+export class CreateOrgDto {
+  @IsNotEmpty()
+  @IsString()
+  orgname: string;
+
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+
+}

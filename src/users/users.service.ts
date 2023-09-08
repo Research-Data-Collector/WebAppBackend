@@ -62,7 +62,7 @@ export class UsersService {
         const newPasswordHash = await hash(userData.password, 12);
         await this.prisma.user.update({
             where: {
-                email: email
+                email: email 
             },
             data: { password: newPasswordHash }
         });

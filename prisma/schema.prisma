@@ -25,6 +25,7 @@ model User {
   // Relations
   role               Role                 @relation(fields: [roleId], references: [id])
   emailVerifications EmailVerifications[]
+  forgetPassword     ForgetPassword[]
   organization       Organization?        @relation(fields: [orgId], references: [id])
 
   adminOrg Organization[] @relation("admin")
@@ -55,6 +56,23 @@ model EmailVerifications {
   // Relations
   user User @relation(fields: [userId], references: [id])
 }
+
+model ForgetPassword {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  otp       String
+  isRequested Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+}
+//  enum Status {
+//   TRUE
+//   FALSE
+//   COMPLETED
+//  }
 
 model Role {
   id        Int      @id @default(autoincrement())
