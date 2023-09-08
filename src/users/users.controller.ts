@@ -22,7 +22,7 @@ export class UsersController {
     return await this.usersService.updateUser(userData);
   }
 
-  @Post('/updatePW/:email') //user can change his name,organization and email
+  @Post('/updatePW/:email') //user can change his password
   //should implement the email varification method for change password
   async updateUserPassword(@Param('email') email:string,
     @Body() userData: UpdatePasswordDto) {

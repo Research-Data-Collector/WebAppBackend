@@ -4,6 +4,7 @@ import {
     IsEmail,
     MinLength,
     MaxLength,
+    Matches,
   } from 'class-validator';
   
   export class LoginDto {
@@ -33,3 +34,29 @@ import {
 //   lname     String
 //   email     String   @unique
 //   password  String
+
+export class ResetDataDto{
+  @IsNotEmpty()
+    @IsString()
+    @MinLength(6)
+    @MaxLength(20)
+    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {message: 'password too weak'})
+    
+    password: string;
+}
+
+export class ValidationPasswordDto {
+  @IsNotEmpty()
+  @IsString()
+  otp: string;
+
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+}
+
+export class ForgetPasswordDto{
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+}
