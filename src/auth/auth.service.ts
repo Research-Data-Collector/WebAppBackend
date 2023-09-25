@@ -20,7 +20,7 @@ export class AuthService {
   async sendOTPEmail(otp: string, email: string, name: string,end:string) {
     const defaultClient = Brevo.ApiClient.instance;
     const apiKey = defaultClient.authentications['api-key'];
-    apiKey.apiKey = "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 "
+    apiKey.apiKey = " "
 
     const apiInstance = new Brevo.TransactionalEmailsApi();
     const sendSmtpEmail = new Brevo.SendSmtpEmail();
@@ -331,6 +331,7 @@ async resetPassword(resetData: ResetDataDto,email:string){
         userId:currentuser.id,
       },
     });
+    console.log(currentuser.id)
 
  
 
@@ -341,7 +342,7 @@ async resetPassword(resetData: ResetDataDto,email:string){
   //     data: { password: newPasswordHash }
   // });
 
-    console.log(requested,resetData.password,newPasswordHash); 
+    //console.log(requested,resetData.password,newPasswordHash); 
   return{
     message:'Password Reset Successfull! Login to continue',
   };
