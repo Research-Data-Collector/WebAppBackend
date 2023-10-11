@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
 import { PrismaService } from 'src/prisma.service';
-import { RoleData } from 'src/utils/types';
+import { AddMembers, RoleData } from 'src/utils/types';
 import { User } from '@prisma/client';
 @Injectable()
 export class AdminService {
@@ -61,5 +61,47 @@ export class AdminService {
         return result;
     }
 
+    //admin add teammembers to the organization
+    async addMembers(addMembersData: AddMembers): Promise<object> {
+
+        //find the team member id in table
+        const memeber=await this.prisma.teamMembers.findFirst({
+            where:{
+                userId:addMembersData.userId,
+                orgId:addMembersData.orgId
+            }
+        })
+        
+        //should update the teammembers table
+       const addMembers=await this.prisma.teamMembers.update({
+            where:{
+                id:memeber.id
+            },
+            data:addMembersData
+              
+         });
+
+         //update the orgId in user table
+         if(addMembersData.status){ //if status is 1 update the user table
+         await this.prisma.user.update({
+            where: {
+                id: addMembersData.userId,
+            },
+            data: { orgId: addMembersData.orgId }
+        });
+
+        return {
+            message: 'Succefully added members',
+        }
+    }
+    //remove request from the admin dashboard
+    //notify the user accepted or not
+
+        }
+
+
+
+
     
 }
+
