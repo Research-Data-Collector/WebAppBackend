@@ -20,3 +20,11 @@ export interface UserDataUpdate {
 export interface RoleData {
     name: RoleName;
 }
+
+export interface AddMembers{
+    userId: number;
+    orgId: number;
+    status: boolean;
+    
+
+}

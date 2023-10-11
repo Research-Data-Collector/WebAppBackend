@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { RoleData } from 'src/utils/types';
+import { AddMembers, RoleData } from 'src/utils/types';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
 
 @Controller('admin')
@@ -19,4 +19,11 @@ export class AdminController {
   // }
 
   //changed the role in to enum
+
+
+  @Post('/addmember')
+  async addMembers(@Body() addMembersData:AddMembers): Promise<object>{
+    return await this.adminService.addMembers(addMembersData)
+  }
 }
+

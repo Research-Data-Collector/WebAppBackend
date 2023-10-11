@@ -110,6 +110,7 @@ model TeamMembers{
   id Int @id @default(autoincrement())
   userId Int
   orgId Int
+  status Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
