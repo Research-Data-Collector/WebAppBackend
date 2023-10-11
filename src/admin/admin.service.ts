@@ -83,28 +83,65 @@ export class AdminService {
 
          //update the orgId in user table
          if(addMembersData.status){ //if status is 1 update the user table
-         await this.prisma.user.update({
-            where: {
-                id: addMembersData.userId,
-            },
-            data: { orgId: addMembersData.orgId }
-        });
+            await this.prisma.user.update({
+                where: {
+                    id: addMembersData.userId,
+                },
+                data: { orgId: addMembersData.orgId }
+            });
 
-        return {
-            message: 'Succefully added members',
+            return {
+                message: 'Succefully added members',
+            }
         }
-    }
     //remove request from the admin dashboard
     //notify the user accepted or not
 
-        }
+    }
 
 
         //show pending join requests where status=0 in teamMember table
+        //should show the user name with picture. pic part to be implemented later
+    async showPendingrequests(email:string): Promise<object[]> {
+    //find the organization id of the admin
+    //find the team members with status=0 and orgId=admin orgId
+    //get team member userid
+    //display the user name and picture
+
+    const admin=await this.prisma.user.findFirst({
+        where:{
+            email:email
+        }
+    });
+
+    const orgId=admin.orgId;
+    const pendingRequests=await this.prisma.teamMembers.findMany({
+        where:{
+            orgId:orgId,
+            status:false
+        },
+        // include:{
+        //     user:true
+        // }
+    });
+
+    const ids=pendingRequests.map((item)=>{
+        return item.userId;
+    });
+
+    const users= await this.prisma.user.findMany({
+        where:{
+            id:{
+                in:ids
+            }
+        }
+    });
+
+    return users;
 
 
-
-
+    
+    }
 
     
 }

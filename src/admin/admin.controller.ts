@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddMembers, RoleData } from 'src/utils/types';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
@@ -24,6 +24,12 @@ export class AdminController {
   @Post('/addmember')
   async addMembers(@Body() addMembersData:AddMembers): Promise<object>{
     return await this.adminService.addMembers(addMembersData)
+  }
+
+
+  @Get('/getrequests')
+  async getRequests(@Param('email')  email:string): Promise<object>{
+    return await this.adminService.showPendingrequests(email)
   }
 }
 
