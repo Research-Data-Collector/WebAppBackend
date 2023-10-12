@@ -36,5 +36,14 @@ export class AdminController {
   async uploadForm(@Body() createFormsData:CreateForms): Promise<object>{
     return await this.adminService.createForms(createFormsData)
   }
+
+  @Get('/getforms')
+  async getForms(@Param('email')  email:string): Promise<object>{
+    return await this.adminService.showForms(email)
+  }
+
+
+
+
 }
 
