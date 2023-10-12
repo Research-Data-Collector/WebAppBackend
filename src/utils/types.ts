@@ -28,3 +28,9 @@ export interface AddMembers{
     
 
 }
+
+export interface CreateForms{
+    title: string;
+    data:JSON;
+    email:string;
+}

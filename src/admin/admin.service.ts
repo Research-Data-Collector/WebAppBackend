@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
 import { PrismaService } from 'src/prisma.service';
-import { AddMembers, RoleData } from 'src/utils/types';
+import { AddMembers, CreateForms, RoleData } from 'src/utils/types';
 import { User } from '@prisma/client';
+import { title } from 'process';
 @Injectable()
 export class AdminService {
 
@@ -142,6 +143,41 @@ export class AdminService {
 
     
     }
+
+
+    //user create forms
+    //upload forms to database
+    async createForms(creatFormsData:CreateForms): Promise<object> {
+        //find the admin id and his organization id using email
+        //upload the form to the database with data, title, adminID
+
+        const admin=await this.prisma.user.findFirst({
+            where:{
+                email:creatFormsData.email
+            }
+        });
+        const orgId=admin.orgId;
+        const title=creatFormsData.title;
+        const adminId=admin.id;
+        const data=JSON.stringify(creatFormsData.data);
+
+        //upload the form
+
+        await this.prisma.forms.create({
+            data:{
+                title:title,
+                data:data,
+                orgId:orgId
+            }
+        });
+
+        return {
+            message: 'Succefully created form',
+        }
+
+
+    }
+    //show created forms
 
     
 }
