@@ -16,6 +16,7 @@ export class AdminService {
               email: organizationData.email,
             },
           });
+          
 
          if(checkUserExists.roleId == 1){ //let admins create the organization
             //only admins can create the organization. UI only 4 admins
@@ -156,12 +157,15 @@ export class AdminService {
                 email:creatFormsData.email
             }
         });
+       
         const orgId=admin.orgId;
         const title=creatFormsData.title;
-        const adminId=admin.id;
+        //const adminId=admin.id;
         const data=JSON.stringify(creatFormsData.data);
 
         //upload the form
+       // return [orgId,creatFormsData.title,data,admin.email];
+      // return [data];
 
         await this.prisma.forms.create({
             data:{
@@ -178,6 +182,37 @@ export class AdminService {
 
     }
     //show created forms
+    //show title, data of creation and form data
+    //if user wants to see the form data, he can click on the title
+
+    //common for both user and admin
+    //should implement in the user module
+    //this should be where user can see all the forms relevant to that organization
+
+    //show all the forms of the organization
+
+    async showForms(email:string):Promise<object>{
+        //email is the admins email
+        //find the ordId using admin email in user table
+        //using orgID display all the forms in that organization in forms table
+
+        const admin=await this.prisma.user.findFirst({
+            where:{
+                email:email
+            }
+        });
+
+        //use org id to find forms
+
+        const forms=await this.prisma.forms.findMany({
+            where:{
+                orgId:admin.orgId
+            }
+        });
+
+        return forms;
+
+    }
 
     
 }
