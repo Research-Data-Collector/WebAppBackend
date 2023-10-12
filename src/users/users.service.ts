@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { UserDataUpdate } from 'src/utils/types';
+import { CreateForms, UserDataUpdate } from 'src/utils/types';
 import { compare, hash } from 'bcrypt'
 import { User } from '@prisma/client';
 import { UpdatePasswordDto } from './user.dto';
@@ -97,6 +97,22 @@ export class UsersService {
 
         return users;
     }
+
+
+    //show created forms
+    //show title, data of creation and form data
+    //if user wants to see the form data, he can click on the title
+
+
+    // async showForms(showFormsData:CreateForms):Promise<object[]>{
+    //     //take user email
+    //     //check user tabe
+
+    // }
+
+    //this is should be the method where user can see the form he has access to 
+    
+    
 
 
 
