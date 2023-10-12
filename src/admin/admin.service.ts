@@ -212,6 +212,10 @@ export class AdminService {
 
         return forms;
 
+
+        //this method is common for both datacollector and admin
+        //both can view forms in their organization
+
     }
 
     
