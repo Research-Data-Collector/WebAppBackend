@@ -26,6 +26,7 @@ import {
     @MaxLength(20)
     password: string;
 
+
     roleId: number;
   }
 //   roleId    Int

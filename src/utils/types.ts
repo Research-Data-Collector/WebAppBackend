@@ -1,4 +1,5 @@
 import { RoleName } from "@prisma/client";
+import { JsonValue } from "@prisma/client/runtime/library";
 
 export interface UserData {
     roleId: number;
@@ -31,6 +32,14 @@ export interface AddMembers{
 
 export interface CreateForms{
     title: string;
-    data:JSON;
+    data:JsonValue;
+    email:string;
+}
+export interface checkAdmin{
+    email:string;
+}
+
+export interface AuthUser{
+    id:number;
     email:string;
 }

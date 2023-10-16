@@ -1,7 +1,11 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateOrgDto, RegisterDto, ValidationDto } from './dto/register.dto';
 import { ForgetPasswordDto, LoginDto, ResetDataDto, ValidationPasswordDto } from './dto/login.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from './user.deco';
+import { AuthUser } from 'src/utils/types';
+
 
 //
 @Controller('auth')
@@ -22,8 +26,10 @@ export class AuthController {
     }
 
 
+    @UseGuards(AuthGuard())
     @Post('verify')
-    async verify(@Body() data: ValidationDto) {
+    async verify(@Body() data: ValidationDto, @User() user: AuthUser) {
+        console.log(user);
         return await this.authService.emailVerification(data['otp'], data['email']);
     }
     
