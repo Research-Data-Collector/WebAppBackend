@@ -5,7 +5,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { jwt_config } from 'src/config/jwt';
 import { LoginDto, ResetDataDto,ForgetPasswordDto } from './dto/login.dto';
-import { User } from '@prisma/client';
 
 import * as Brevo from '@getbrevo/brevo';
 
@@ -66,8 +65,16 @@ export class AuthService {
       throw new HttpException('User already registered', HttpStatus.FOUND);
     }
     data.password = await hash(data.password, 12);
+
     const createUser = await this.prisma.user.create({
       data: data,
+    });
+
+    await this.prisma.user.update({
+      where: {
+        id: createUser.id,
+      },
+      data: { isVerified: true }
     });
     
     // if(checkUserExists.roleId == 1){
@@ -86,18 +93,18 @@ export class AuthService {
 
       const otp = Math.floor(100000 + Math.random() * 900000);
 
-      // Send Email
+      // Send Email : Temp disabled for dev.
       
-      const end:string="This is OTP for email verification."+"\n"+"Pleses verify your email address to complete your registration."
-      this.sendOTPEmail(otp.toString(), createUser.email, createUser.fname + ' ' + createUser.lname,end);
+      // const end:string="This is OTP for email verification."+"\n"+"Pleses verify your email address to complete your registration."
+      // this.sendOTPEmail(otp.toString(), createUser.email, createUser.fname + ' ' + createUser.lname,end);
 
-      // Create Email Verification Record
-      await this.prisma.emailVerifications.create({//emailVerifications is the table name
-        data: {
-          otp: otp.toString(),
-          userId: createUser.id
-        }
-      });
+      // // Create Email Verification Record
+      // await this.prisma.emailVerifications.create({//emailVerifications is the table name
+      //   data: {
+      //     otp: otp.toString(),
+      //     userId: createUser.id
+      //   }
+      // });
 
       return {
         message: 'Sign Up Successfull!',
