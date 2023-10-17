@@ -1,23 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { UserData } from 'src/utils/types';
+import { CreateForms, UserDataUpdate } from 'src/utils/types';
+import { compare, hash } from 'bcrypt'
+import { User } from '@prisma/client';
+import { UpdatePasswordDto } from './user.dto';
+
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) { }
+
+    async getUser(email: string): Promise<User> {
 
 
-    async createUser(userData:UserData): Promise<object> {
-        // Implement Password Hashing.
-
-        const result = await this.prisma.user.create({
-            data: userData
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email
+            }
         });
 
-        return result;
+        if (!user) {
+            throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+        }
+
+        return user;
     }
 
-    async updateUser(userData:UserData): Promise<object> {
+
+
+
+    //use this to let user edit info in profile. handle password change in another method. UI should not allow user to change password in profile
+    async updateUser(userData: UserDataUpdate): Promise<object> {
+
         const result = await this.prisma.user.update({
             where: {
                 email: userData.email
@@ -28,7 +42,38 @@ export class UsersService {
         return result;
     }
 
-    async deleteUser(email:string): Promise<object> {
+    //change password second method-working. use this to let user change password in profile. 
+    //change email here to id??
+    async updateUserPassword(userData: UpdatePasswordDto, email: string) {
+
+        const user = await this.prisma.user.findFirst({
+            where: {
+                email: email
+            },
+        });
+        const checkPassword = await compare(
+            userData.oldPassword,
+            user.password,
+        );
+
+        if (!checkPassword) {
+            throw new HttpException('Password Incorrect', HttpStatus.UNAUTHORIZED)
+        }
+        const newPasswordHash = await hash(userData.password, 12);
+        await this.prisma.user.update({
+            where: {
+                email: email 
+            },
+            data: { password: newPasswordHash }
+        });
+
+        return {
+            message: 'Password Updated',
+        };
+    }
+
+
+    async deleteUser(email: string): Promise<object> {
         const result = await this.prisma.user.delete({
             where: {
                 email: email
@@ -37,5 +82,42 @@ export class UsersService {
 
         return result;
     }
+
+
+
+
+    async getAllUsers(): Promise<object[]> {
+        const users = await this.prisma.user.findMany({
+            include: {
+                role: true
+            }
+        });
+
+        console.log(users[0].role.name);
+
+        return users;
+    }
+
+
+    //show created forms
+    //show title, data of creation and form data
+    //if user wants to see the form data, he can click on the title
+
+
+    // async showForms(showFormsData:CreateForms):Promise<object[]>{
+    //     //take user email
+    //     //check user tabe
+
+    // }
+
+    //this is should be the method where user can see the form he has access to 
     
+    
+
+
+
+
+
 }
+
+
