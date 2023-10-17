@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
-import { CreateOrgDto, RegisterDto } from './dto/register.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateOrgDto, RegisterDto } from 'src/auth/dto/register.dto';
+import { PrismaService } from 'src/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { jwt_config } from 'src/config/jwt';
-import { LoginDto, ResetDataDto,ForgetPasswordDto } from './dto/login.dto';
+import { LoginDto, ResetDataDto,ForgetPasswordDto } from 'src/auth/dto/login.dto';
 
-import * as Brevo from '@getbrevo/brevo';
+import * as Brevo from '@getbrevo/brevo'; 
 
 @Injectable()
 export class AuthService {

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AdminService } from './admin.service';
-import { AdminController } from './admin.controller';
+import { AdminService } from 'src/admin/admin.service';
+import { AdminController } from 'src/admin/admin.controller';
 import { PrismaService } from 'src/prisma.service';
 import { PassportModule } from '@nestjs/passport';
 

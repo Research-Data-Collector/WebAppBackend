@@ -1,9 +1,9 @@
 import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateOrgDto, RegisterDto, ValidationDto } from './dto/register.dto';
-import { ForgetPasswordDto, LoginDto, ResetDataDto, ValidationPasswordDto } from './dto/login.dto';
+import { AuthService } from 'src/auth/auth.service';
+import { CreateOrgDto, RegisterDto, ValidationDto } from 'src/auth/dto/register.dto';
+import { ForgetPasswordDto, LoginDto, ResetDataDto, ValidationPasswordDto } from 'src/auth/dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from './user.deco';
+import { User } from 'src/auth/user.deco';
 import { AuthUser } from 'src/utils/types';
 
 
