@@ -1,11 +1,11 @@
 import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
-import { AdminService } from './admin.service';
+import { AdminService } from 'src/admin/admin.service';
 import { AddMembers, AuthUser, CreateForms, RoleData, checkAdmin } from 'src/utils/types';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/auth/user.deco';
 
-@UseGuards(AuthGuard())
+//@UseGuards(AuthGuard())
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
@@ -25,24 +25,24 @@ export class AdminController {
 
 
   @Post('/addmember')
-  async addMembers(@Body() addMembersData:AddMembers, @User() user:AuthUser): Promise<object>{
+  async addMembers(@Body() addMembersData:AddMembers): Promise<object>{
     return await this.adminService.addMembers(addMembersData)
   }
 
 
-  @Get('/getrequests')
-  async getRequests(@User() user:AuthUser): Promise<object>{
-    return await this.adminService.showPendingrequests(user.email);
+  @Post('/getrequests')
+  async getRequests(@Body() checkAdminData:checkAdmin): Promise<object>{
+    return await this.adminService.showPendingrequests(checkAdminData);
   }  
 
   @Post('/uploadform')
-  async uploadForm(@Body() createFormsData:CreateForms, @User() user:AuthUser): Promise<object>{
+  async uploadForm(@Body() createFormsData:CreateForms): Promise<object>{
     return await this.adminService.createForms(createFormsData)
   }
 
   @Post('/getforms')
-  async getForms(@User() user:AuthUser): Promise<object>{
-    return await this.adminService.showForms(user.email)
+  async getForms(@Body() emailData:checkAdmin): Promise<object>{//@User() user:AuthUser
+    return await this.adminService.showForms(emailData)
   }
 
   @Get('/createform')

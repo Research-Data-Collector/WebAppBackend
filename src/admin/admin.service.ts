@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
 import { PrismaService } from 'src/prisma.service';
 import { AddMembers, AuthUser, CreateForms, RoleData, checkAdmin } from 'src/utils/types';
-import { User } from '@prisma/client';
-import { title } from 'process';
 @Injectable()
 export class AdminService {
 
@@ -103,15 +101,17 @@ export class AdminService {
 
         //show pending join requests where status=0 in teamMember table
         //should show the user name with picture. pic part to be implemented later
-    async showPendingrequests(email:string): Promise<object[]> {
+    async showPendingrequests(checkAdminData:checkAdmin): Promise<object> {
     //find the organization id of the admin
     //find the team members with status=0 and orgId=admin orgId
     //get team member userid
     //display the user name and picture
 
-    const admin=await this.prisma.user.findFirst({
+    ;
+
+    const admin=await this.prisma.user.findUnique({
         where:{
-            email:email
+            email:checkAdminData.email
         }
     });
     //console.log(admin.email);
@@ -127,19 +127,23 @@ export class AdminService {
         // }
     });
 
-    const ids=pendingRequests.map((item)=>{
+    const ids = pendingRequests.map((item) => {
         return item.userId;
     });
 
-    const users= await this.prisma.user.findMany({
-        where:{
-            id:{
-                in:ids
+    const users = await this.prisma.user.findMany({
+        where: {
+            id: {
+                in: ids
             }
         }
     });
 
-    return users;
+    const fnames = users.map((user) => user.fname);
+    const lnames = users.map((user) => user.lname);
+    const Ids = users.map((user) => user.id);
+
+    return [fnames,lnames,Ids];
 
 
     
@@ -185,6 +189,8 @@ export class AdminService {
                 email:creatFormsData.email
             }
         });
+       // console.log(admin);
+       //return [admin];
        
         const orgId=admin.orgId;
         const title=creatFormsData.title;
@@ -219,22 +225,34 @@ export class AdminService {
 
     //show all the forms of the organization
 
-    async showForms(email:string):Promise<object>{
-        //email is the admins email
+    async showForms(emailData:checkAdmin):Promise<object>{
+        //email is the any email
         //find the ordId using admin email in user table
         //using orgID display all the forms in that organization in forms table
 
-        const adminForms = await this.prisma.forms.findMany({
+        // const adminForms = await this.prisma.forms.findMany({
+        //     where:{
+        //         organization: {
+        //             admin:{ 
+        //                 email:email
+        //             }
+        //         }
+        //     }
+        // });
+
+        const user = await this.prisma.user.findFirst({
             where:{
-                organization: {
-                    admin:{ 
-                        email:email
-                    }
-                }
+                email:emailData.email
             }
         });
 
-        return adminForms;
+        const form=await this.prisma.forms.findMany({
+            where:{
+                orgId:user.orgId
+            }
+        });
+
+        return form;
 
 
         //this method is common for both datacollector and admin
