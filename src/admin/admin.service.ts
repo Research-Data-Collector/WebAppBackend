@@ -245,6 +245,20 @@ export class AdminService {
 
     //show all the forms of the organization
 
+    async showOrgForms(emailData:checkAdmin):Promise<object>{
+        const adminForms = await this.prisma.forms.findMany({
+            where:{
+                organization: {
+                    admin:{ 
+                        email:emailData.email
+                    }
+                }
+            }
+        });
+
+        return adminForms;
+    }
+
     async showForms(emailData:checkAdmin):Promise<object>{
         //email is the any email
         //find the ordId using admin email in user table
@@ -266,13 +280,32 @@ export class AdminService {
             }
         });
 
-        const form=await this.prisma.forms.findMany({
+        // const form=await this.prisma.forms.findMany({
+        //     where:{
+        //         orgId:user.orgId
+        //     }
+        // }); //this is finding forms in the organization
+
+        //forms related to the user
+
+        const forms = await this.prisma.teamMembers.findMany({
             where:{
-                orgId:user.orgId
+                userId:user.id
+            }
+        });//get the form ID
+        //display form
+
+        const display=await this.prisma.forms.findMany({
+            where:{
+                id:{
+                    in:forms.map((item) => {
+                        return item.formId;
+                    })
+                }
             }
         });
 
-        return form;
+        return display;
 
 
         //this method is common for both datacollector and admin
