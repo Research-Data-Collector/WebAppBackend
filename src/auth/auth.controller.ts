@@ -26,10 +26,10 @@ export class AuthController {
     }
 
 
-    @UseGuards(AuthGuard())
+    //@UseGuards(AuthGuard())
     @Post('verify')
-    async verify(@Body() data: ValidationDto, @User() user: AuthUser) {
-        console.log(user);
+    async verify(@Body() data: ValidationDto) {
+      
         return await this.authService.emailVerification(data['otp'], data['email']);
     }
     
