@@ -45,11 +45,15 @@ export class AdminController {
     return await this.adminService.showForms(emailData)
   }
 
-  @Get('/createform')
-  async createForm(@Param() checkAdminData:checkAdmin, @User() user:AuthUser): Promise<object>{
-    return await this.adminService.checkAdmin(checkAdminData,user)
+  // @Get('/createform')
+  // async createForm(@Param() checkAdminData:checkAdmin, @User() user:AuthUser): Promise<object>{
+  //   return await this.adminService.checkAdmin(checkAdminData,user)
+  // }
+ 
+  @Post('/getOrgforms')
+  async getOrgForms(@Body() emailData:checkAdmin): Promise<object>{
+    return await this.adminService.showOrgForms(emailData)
   }
-
 
 
 
