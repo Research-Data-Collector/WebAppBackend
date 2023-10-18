@@ -24,7 +24,7 @@ export interface RoleData {
 
 export interface AddMembers{
     userId: number;
-    orgId: number;
+    formId: number;
     status: boolean;
     
 
@@ -34,6 +34,7 @@ export interface CreateForms{
     title: string;
     data:JsonValue;
     email:string;
+    description:string;
 }
 export interface checkAdmin{
     email:string;
@@ -42,4 +43,8 @@ export interface checkAdmin{
 export interface AuthUser{
     id:number;
     email:string;
+}
+export interface SendRequests{
+    email:string;
+    formId:number;
 }

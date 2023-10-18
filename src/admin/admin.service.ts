@@ -67,32 +67,50 @@ export class AdminService {
         //find the team member id in table
         const memeber = await this.prisma.teamMembers.findFirst({
             where:{
-                userId:addMembersData.userId,
-                orgId:addMembersData.orgId
+                userId:addMembersData.userId,//else we can use email
+                formId:addMembersData.formId
             }
         })
         
         //should update the teammembers table
-       const addMembers=await this.prisma.teamMembers.update({
+    //    const addMembers=await this.prisma.teamMembers.update({
+    //         where:{
+    //             id:memeber.id
+    //         },
+    //         data:addMembersData
+    //      });
+
+         //update the orgId in user table
+        //  if(addMembersData.status){ //if status is 1 update the user table
+        //     await this.prisma.user.update({
+        //         where: {
+        //             id: addMembersData.userId,
+        //         },
+        //         data: { orgId: addMembersData.orgId }
+        //     });
+
+        //     return {
+        //         message: 'Succefully added members',
+        //     }
+        // }
+
+
+        //no need to update user table
+        //only update the team members table- make status=1
+
+        await this.prisma.teamMembers.update({
             where:{
                 id:memeber.id
             },
-            data:addMembersData
-         });
-
-         //update the orgId in user table
-         if(addMembersData.status){ //if status is 1 update the user table
-            await this.prisma.user.update({
-                where: {
-                    id: addMembersData.userId,
-                },
-                data: { orgId: addMembersData.orgId }
-            });
-
-            return {
-                message: 'Succefully added members',
+            data:{
+                status:addMembersData.status
             }
+        });
+
+        return {
+            message: 'Succefully added members',
         }
+
     //remove request from the admin dashboard
     //notify the user accepted or not
 
@@ -196,6 +214,7 @@ export class AdminService {
         const title=creatFormsData.title;
         //const adminId=admin.id;
         var data=creatFormsData.data;
+        const description=creatFormsData.description;
 
         //upload the form
        // return [orgId,creatFormsData.title,data,admin.email];
@@ -205,7 +224,8 @@ export class AdminService {
             data:{
                 title:title,
                 data:data,
-                orgId:orgId
+                orgId:orgId,
+                description:description
             }
         });
 
