@@ -19,7 +19,7 @@ export class AuthService {
   async sendOTPEmail(otp: string, email: string, name: string,end:string) {
     const defaultClient = Brevo.ApiClient.instance;
     const apiKey = defaultClient.authentications['api-key'];
-    apiKey.apiKey = " "
+    apiKey.apiKey = ""//"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"
 
     const apiInstance = new Brevo.TransactionalEmailsApi();
     const sendSmtpEmail = new Brevo.SendSmtpEmail();
@@ -74,7 +74,7 @@ export class AuthService {
       where: {
         id: createUser.id,
       },
-      data: { isVerified: true }
+      data: { isVerified: false}
     });
     
     // if(checkUserExists.roleId == 1){
@@ -95,16 +95,16 @@ export class AuthService {
 
       // Send Email : Temp disabled for dev.
       
-      // const end:string="This is OTP for email verification."+"\n"+"Pleses verify your email address to complete your registration."
-      // this.sendOTPEmail(otp.toString(), createUser.email, createUser.fname + ' ' + createUser.lname,end);
+      const end:string="This is OTP for email verification."+"\n"+"Pleses verify your email address to complete your registration."
+      this.sendOTPEmail(otp.toString(), createUser.email, createUser.fname + ' ' + createUser.lname,end);
 
-      // // Create Email Verification Record
-      // await this.prisma.emailVerifications.create({//emailVerifications is the table name
-      //   data: {
-      //     otp: otp.toString(),
-      //     userId: createUser.id
-      //   }
-      // });
+      // Create Email Verification Record
+      await this.prisma.emailVerifications.create({//emailVerifications is the table name
+        data: {
+          otp: otp.toString(),
+          userId: createUser.id
+        }
+      });
 
       return {
         message: 'Sign Up Successfull!',
