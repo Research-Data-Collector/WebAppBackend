@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { UserDataUpdate } from 'src/utils/types';
+import { SendRequests, UserDataUpdate } from 'src/utils/types';
 import { compare, hash } from 'bcrypt'
 import { User } from '@prisma/client';
 import { UpdatePasswordDto } from 'src/users/user.dto';
@@ -113,6 +113,43 @@ export class UsersService {
     //this is should be the method where user can see the form he has access to 
     
     
+    //users send join requests to admin
+
+    async sendjoinRequests(sendRequestsdata:SendRequests):Promise<object>{
+        //userId Int 
+  //orgId Int
+  //formId Int -from data
+
+        //find user id using email
+        const user = await this.prisma.user.findFirst({
+            where:{
+                email:sendRequestsdata.email
+            }
+        });
+        const userId=user.id;
+
+        //find org id using formId
+        const form = await this.prisma.forms.findFirst({
+            where:{
+                id:sendRequestsdata.formId
+            }
+        });
+        const orgId=form.orgId;
+
+        const result = await this.prisma.teamMembers.create({
+            data:{
+                userId:userId,
+                orgId:orgId,
+                formId:sendRequestsdata.formId,
+            }
+        });
+        return {
+            message: 'Succefully sent request',
+        }
+
+
+        
+    }
 
 
 
