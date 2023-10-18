@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { UserData } from 'src/utils/types';
+import { SendRequests, UserData } from 'src/utils/types';
 import { UpdatePasswordDto } from 'src/users/user.dto';
 
 
@@ -39,4 +39,12 @@ export class UsersController {
   //   await this.usersService.updatePassword(userId, changePasswordDto.oldPassword, changePasswordDto.newPassword);
   //   return{message:'Password updated successfully'}
   // }
+
+
+  @Post('/sendrequest')
+async sendRequest(@Body() sendRequestsData:SendRequests): Promise<object>{
+  return await this.usersService.sendjoinRequests(sendRequestsData)
 }
+
+}
+
