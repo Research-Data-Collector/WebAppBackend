@@ -152,6 +152,47 @@ export class UsersService {
     }
 
 
+    //for searching
+     async queryBuilder(alias:string ,table:string){
+        console.log(alias,'alias');
+       
+
+
+
+
+
+
+
+        if(table.match('forms')){
+            const res=await this.prisma.forms.findMany({
+                where:{
+                    title:{
+                        contains:alias
+                    }
+                }
+    
+            });
+            console.log(res,'forms');
+            return res;
+
+        }
+        else if(table.match('organization')){
+            const res=await this.prisma.organization.findMany({
+                where:{
+                    orgname:{
+                        contains:alias
+                    }
+                }
+            });
+            return res;
+        }
+
+
+        
+        
+     }
+
+
 
 
 
