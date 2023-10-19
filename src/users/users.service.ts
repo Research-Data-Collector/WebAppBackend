@@ -154,14 +154,8 @@ export class UsersService {
 
     //for searching
      async queryBuilder(alias:string ,table:string){
-        console.log(alias,'alias');
-       
-
-
-
-
-
-
+        //console.log(alias,'alias');
+    
 
         if(table.match('forms')){
             const res=await this.prisma.forms.findMany({
@@ -172,7 +166,7 @@ export class UsersService {
                 }
     
             });
-            console.log(res,'forms');
+            //console.log(res,'forms');
             return res;
 
         }
@@ -184,9 +178,23 @@ export class UsersService {
                     }
                 }
             });
-            return res;
-        }
+            const forms=await this.prisma.forms.findMany({
+                where:{
+                    id:{
+                        in:res.map((item)=>{
+                            return item.id
+                        })
+                    }
 
+                }
+            })
+            return forms;
+        }
+        // id:{
+        //     in:forms.map((item) => {
+        //         return item.formId;
+        //     })
+        // }
 
         
         
