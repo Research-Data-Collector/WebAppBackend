@@ -46,5 +46,12 @@ async sendRequest(@Body() sendRequestsData:SendRequests): Promise<object>{
   return await this.usersService.sendjoinRequests(sendRequestsData)
 }
 
+  @Get('/search/:alias/:table')
+  async searchUser(@Param('alias')alias:string, @Param('table') table:string){
+    const builder= await this.usersService.queryBuilder(alias,table);
+    //console.log(table)
+    return await builder;
+  }
+
 }
 
