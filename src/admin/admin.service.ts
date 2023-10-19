@@ -260,20 +260,7 @@ export class AdminService {
     }
 
     async showForms(emailData:checkAdmin):Promise<object>{
-        //email is the any email
-        //find the ordId using admin email in user table
-        //using orgID display all the forms in that organization in forms table
-
-        // const adminForms = await this.prisma.forms.findMany({
-        //     where:{
-        //         organization: {
-        //             admin:{ 
-        //                 email:email
-        //             }
-        //         }
-        //     }
-        // });
-
+       
         const user = await this.prisma.user.findFirst({
             where:{
                 email:emailData.email
