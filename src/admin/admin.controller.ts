@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
 import { AdminService } from 'src/admin/admin.service';
-import { AddMembers, AuthUser, CreateForms, RoleData, checkAdmin } from 'src/utils/types';
+import { AddMembers, AuthUser, CreateForms, RoleData, checkAdmin, checkForm } from 'src/utils/types';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/auth/user.deco';
@@ -53,6 +53,12 @@ export class AdminController {
   @Post('/getOrgforms')
   async getOrgForms(@Body() emailData:checkAdmin): Promise<object>{
     return await this.adminService.showOrgForms(emailData)
+  }
+
+  @Post('/getsubmissions')
+  async getsubmissions(@Body() formIdData:checkForm): Promise<object>{
+    console.log(formIdData)
+    return await this.adminService.showSubmissions(formIdData)
   }
 
 
