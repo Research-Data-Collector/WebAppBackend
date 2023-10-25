@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { SendRequests, UserData } from 'src/utils/types';
+import { SendRequests, UploadForm, UserData } from 'src/utils/types';
 import { UpdatePasswordDto } from 'src/users/user.dto';
 
 
@@ -55,6 +55,11 @@ async sendRequest(@Body() sendRequestsData:SendRequests): Promise<object>{
   @Post('/joinedforms')
   async joinedForms(@Body() emailData:SendRequests): Promise<object>{
     return await this.usersService.joinedResearches(emailData);
+  }
+
+  @Post('/submitforms')
+  async submitForms(@Body() formData:UploadForm): Promise<object>{
+    return await this.usersService.uploadFilledForm(formData);
   }
 
 }
