@@ -135,3 +135,8 @@ model FormSubmissions {
   form Forms @relation(fields: [formId], references: [id])
   user User @relation(fields: [userId], references: [id])
 }
+
+model TestFile{
+  id  Int  @id @default(autoincrement())
+  file Bytes
+}
