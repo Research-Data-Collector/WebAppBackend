@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
 import { PrismaService } from 'src/prisma.service';
-import { AddMembers, AuthUser, CreateForms, RoleData, checkAdmin, upload } from 'src/utils/types';
+import { AddMembers, AuthUser, CreateForms, RoleData, checkAdmin, checkForm, upload } from 'src/utils/types';
 @Injectable()
 export class AdminService {
 
@@ -314,6 +314,32 @@ export class AdminService {
       
     //   }
       
+
+    async showSubmissions(formIdData:checkForm):Promise<object>{
+        const formSubmissions = await this.prisma.formSubmissions.findMany({
+            where: {
+                formId: formIdData.formId,
+            },
+        });
+
+        const userIds = formSubmissions.map((item) => Number(item.userId));
+        //console.log(userIds, "userIds");
+
+        const users = await this.prisma.user.findMany({
+            where: {
+                id: {
+                    in: userIds
+                }
+            },
+        });
+
+        const usernames = users.map((user) => ({
+            fname: user.fname,
+            lname: user.lname,
+        }));
+
+        return [formSubmissions, usernames];
+    }
 
     
 }
