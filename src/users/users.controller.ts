@@ -52,6 +52,10 @@ async sendRequest(@Body() sendRequestsData:SendRequests): Promise<object>{
     //console.log(table)
     return await builder;
   }
+  @Post('/joinedforms')
+  async joinedForms(@Body() emailData:SendRequests): Promise<object>{
+    return await this.usersService.joinedResearches(emailData);
+  }
 
 }
 
