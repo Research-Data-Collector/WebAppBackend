@@ -127,7 +127,7 @@ model FormSubmissions {
   id       Int      @id @default(autoincrement())
   formId   Int
   userId   Int
-  data     Json
+  data     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
