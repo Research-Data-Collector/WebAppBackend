@@ -52,3 +52,7 @@ export interface SendRequests{
 export interface upload{
     file:Blob;
 }
+
+export interface checkForm{
+    formId:number;
+}
