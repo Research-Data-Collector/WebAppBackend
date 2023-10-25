@@ -71,44 +71,37 @@ export class AdminService {
                 formId:addMembersData.formId
             }
         })
+
+
         
-        //should update the teammembers table
-    //    const addMembers=await this.prisma.teamMembers.update({
-    //         where:{
-    //             id:memeber.id
-    //         },
-    //         data:addMembersData
-    //      });
 
-         //update the orgId in user table
-        //  if(addMembersData.status){ //if status is 1 update the user table
-        //     await this.prisma.user.update({
-        //         where: {
-        //             id: addMembersData.userId,
-        //         },
-        //         data: { orgId: addMembersData.orgId }
-        //     });
+        if(addMembersData.status==true){
+            await this.prisma.teamMembers.update({
+                where:{
+                    id:memeber.id
+                },
+                
+                data:{
+                    status:addMembersData.status
+                }
+            });
+        }
+        else{
+            await this.prisma.teamMembers.delete({
+                where:{
+                    id:memeber.id
+                }
+            });
+        };//if status is false, delete the request
 
-        //     return {
-        //         message: 'Succefully added members',
-        //     }
-        // }
-
-
-        //no need to update user table
-        //only update the team members table- make status=1
-
-        await this.prisma.teamMembers.update({
-            where:{
-                id:memeber.id
-            },
-            data:{
-                status:addMembersData.status
+        if(addMembersData.status==true){
+            return {
+                message: 'Succefully added member',
             }
-        });
-
-        return {
-            message: 'Succefully added members',
+        }else{
+            return {
+                message: 'Succefully rejected member,record deleted',
+            }
         }
 
     //remove request from the admin dashboard
