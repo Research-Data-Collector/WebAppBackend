@@ -56,3 +56,9 @@ export interface upload{
 export interface checkForm{
     formId:number;
 }
+
+export interface UploadForm{
+    formId:number;
+    email:string;
+    data:String;
+}

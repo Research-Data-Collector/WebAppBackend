@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { SendRequests, UserDataUpdate, checkAdmin } from 'src/utils/types';
+import { SendRequests, UploadForm, UserDataUpdate, checkAdmin } from 'src/utils/types';
 import { compare, hash } from 'bcrypt'
 import { User } from '@prisma/client';
 import { UpdatePasswordDto } from 'src/users/user.dto';
@@ -260,6 +260,32 @@ export class UsersService {
           }));
         
           return responseData;
+     }
+
+     //subimissions by datacollector
+     //formID,userID,data
+
+     async uploadFilledForm(uploadData:UploadForm):Promise<object>{
+        const user = await this.prisma.user.findFirst({
+            where: {
+                email: uploadData.email,
+            },
+        });
+        const userId = user.id;
+        const data = JSON.parse(uploadData.data.toString());
+        await this.prisma.formSubmissions.create({
+            data: {
+                formId: uploadData.formId,
+                userId: userId,
+                data: data,
+            },
+        });
+        console.log(data, "data");
+        return{
+            message:'Succefully uploaded'
+        }
+
+
      }
 
 
