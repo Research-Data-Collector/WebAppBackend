@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
 import { PrismaService } from 'src/prisma.service';
-import { AddMembers, AuthUser, CreateForms, RoleData, checkAdmin } from 'src/utils/types';
+import { AddMembers, AuthUser, CreateForms, RoleData, checkAdmin, upload } from 'src/utils/types';
 @Injectable()
 export class AdminService {
 
@@ -148,6 +148,9 @@ export class AdminService {
     const ids = pendingRequests.map((item) => {
         return item.userId;
     });
+    const formId=pendingRequests.map((item) => {
+        return item.formId;
+    });
 
     const users = await this.prisma.user.findMany({
         where: {
@@ -161,7 +164,7 @@ export class AdminService {
     const lnames = users.map((user) => user.lname);
     const Ids = users.map((user) => user.id);
 
-    return [fnames,lnames,Ids];
+    return [fnames,lnames,Ids,formId];
 
 
     
@@ -299,6 +302,18 @@ export class AdminService {
         //both can view forms in their organization
 
     }
+
+
+
+    // async UploadedFile(uploadData:upload):Promise<object>{
+    //     const result=await this.prisma.testFile.create({
+    //       data:uploadData,
+    //     });
+
+    //     return result;
+      
+    //   }
+      
 
     
 }
