@@ -48,3 +48,7 @@ export interface SendRequests{
     email:string;
     formId:number;
 }
+
+export interface upload{
+    file:Blob;
+}
