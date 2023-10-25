@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { SendRequests, UserDataUpdate } from 'src/utils/types';
+import { SendRequests, UserDataUpdate, checkAdmin } from 'src/utils/types';
 import { compare, hash } from 'bcrypt'
 import { User } from '@prisma/client';
 import { UpdatePasswordDto } from 'src/users/user.dto';
@@ -198,6 +198,68 @@ export class UsersService {
 
         
         
+     }
+
+     //joined researches by datacollector
+     //form data, Id, title, description, orgname
+
+     async joinedResearches(EmailData:checkAdmin):Promise<object[]>{
+        //find the user id using email
+        const user = await this.prisma.user.findFirst({
+            where:{
+                email:EmailData.email
+            }
+        });
+        const userId=user.id;
+
+        //find the form id using userId
+        const forms = await this.prisma.teamMembers.findMany({
+            where:{
+                userId:userId
+            }
+        });
+        
+        const res=await this.prisma.forms.findMany({
+            where:{
+                id:{
+                    in:forms.map((item) => {
+                        return item.formId;
+                    })
+                }
+            }
+        });
+        //console.log(res,'res');
+        let org = await this.prisma.organization.findMany({
+            where: {
+                id: {
+                    in: res.map((item) => {
+                        return item.orgId;
+                    }),
+                },
+            },
+        });
+
+    
+        // for (const item of res) {
+        //     console.log(item.title, ' - title');
+        //     console.log(item.description, ' - description');
+        //     console.log(item.data, ' - data');
+        //     const org = await this.prisma.organization.findMany({
+        //         where: {
+        //             id: item.orgId,
+        //         },
+        //     });
+        //     console.log(org[0].orgname, ' - org');
+        // }
+        const responseData = res.map((item) => ({
+            title: item.title,
+            formId: item.id,
+            description: item.description,
+            data: item.data,
+            org: org.find((orgItem) => orgItem.id === item.orgId).orgname,
+          }));
+        
+          return responseData;
      }
 
 
