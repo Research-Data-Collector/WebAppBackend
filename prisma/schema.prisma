@@ -127,7 +127,7 @@ model FormSubmissions {
   id       Int      @id @default(autoincrement())
   formId   Int
   userId   Int
-  data     String
+  data   String @db.Text  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

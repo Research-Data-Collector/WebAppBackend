@@ -60,5 +60,5 @@ export interface checkForm{
 export interface UploadForm{
     formId:number;
     email:string;
-    data:String;
+    data:string;
 }
