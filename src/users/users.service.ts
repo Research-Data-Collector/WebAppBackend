@@ -272,15 +272,17 @@ export class UsersService {
             },
         });
         const userId = user.id;
-        const data = JSON.parse(uploadData.data.toString());
+        //const data = JSON.parse(uploadData.data.toString());
+        
+        //const data = JSON.stringify(uploadData.data);
         await this.prisma.formSubmissions.create({
             data: {
                 formId: uploadData.formId,
                 userId: userId,
-                data: data,
+                data:uploadData.data,
             },
         });
-        console.log(data, "data");
+        //console.log(data, "data");
         return{
             message:'Succefully uploaded'
         }
