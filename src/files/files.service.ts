@@ -23,20 +23,24 @@ export class FilesService {
     }
 
 
-    async saveFileS3(file: Express.Multer.File): Promise<any> {
+    async saveFileS3(file) {
+        if (!file) {
+            throw new Error('File is undefined or null');
+        }
+    
         const fileName = `${uuidv4()}.${file.mimetype.split('/')[1]}`;
-
+    
         const command = new PutObjectCommand({
             Bucket: this.config.get('AWS_BUCKET_NAME'),
             Key: fileName,
             Body: file.buffer,
         });
-
+    
         const response = await this.s3Client.send(command);
         
-        //fs.writeFile(path.join(__dirname, '..', '..', '..', 'uploads', fileName), file.buffer);
-        return response;
+        return fileName;
     }
+    
 
     async getFileS3(body: object): Promise<any> {
         const command = new GetObjectCommand({
