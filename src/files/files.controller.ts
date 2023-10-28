@@ -8,10 +8,11 @@ export class FilesController {
 
 
   @Post('/save-file-s3')
-  @UseInterceptors(FileInterceptor('file'))
-  async saveFileS3(@UploadedFile() file: Express.Multer.File): Promise<any> {
-    return await this.filesService.saveFileS3(file);
-  }
+@UseInterceptors(FileInterceptor('file'))
+async saveFileS3(@UploadedFile() file: Express.Multer.File): Promise<any> {
+  return await this.filesService.saveFileS3(file);
+}
+
 
   @Post('/get-file-s3')
   async getFileS3(@Body() body:object): Promise<any> {
