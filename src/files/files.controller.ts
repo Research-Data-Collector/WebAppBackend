@@ -7,10 +7,10 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
 
-  @Post('/save-file-s3')
+@Post('/save-file-s3')
 @UseInterceptors(FileInterceptor('file'))
-async saveFileS3(@UploadedFile() file: Express.Multer.File): Promise<any> {
-  return await this.filesService.saveFileS3(file);
+async saveFileS3(@UploadedFile() file: Express.Multer.File, @Body() body:object): Promise<any> {
+  return await this.filesService.saveFileS3(file, body['ext']);
 }
 
 
