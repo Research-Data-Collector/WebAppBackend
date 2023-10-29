@@ -23,12 +23,13 @@ export class FilesService {
     }
 
 
-    async saveFileS3(file) {
+    async saveFileS3(file:Express.Multer.File, ext:string): Promise<any> {
         if (!file) {
             throw new Error('File is undefined or null');
         }
+
     
-        const fileName = `${uuidv4()}.${file.mimetype.split('/')[1]}`;
+        const fileName = `${uuidv4()}${ext}`;
     
         const command = new PutObjectCommand({
             Bucket: this.config.get('AWS_BUCKET_NAME'),
