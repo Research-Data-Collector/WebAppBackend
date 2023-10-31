@@ -180,7 +180,7 @@ export class UsersService {
             });
             const forms=await this.prisma.forms.findMany({
                 where:{
-                    id:{
+                    orgId:{
                         in:res.map((item)=>{
                             return item.id
                         })
