@@ -138,30 +138,67 @@ export class AdminService {
         // }
     });
 
-    const ids = pendingRequests.map((item) => {
-        return item.userId;
-    });
-    const formId=pendingRequests.map((item) => {
-        return item.formId;
-    });
 
-    const users = await this.prisma.user.findMany({
-        where: {
-            id: {
-                in: ids
+         const requestsMap = new Map();
+
+        for (const request of pendingRequests) {
+            const formId = request.formId;
+            const userId = request.userId;
+            const reqCreatedAt = request.createdAt;
+    
+            if (!requestsMap.has(formId)) {
+                requestsMap.set(formId, {
+                    formId,
+                    request: []
+                });
+            }
+    
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: userId
+                }});
+    
+            if (user) {
+                requestsMap.get(formId).request.push({
+                    userId: user.id,
+                    fname: user.fname,
+                    lname: user.lname,
+                    createdAt: reqCreatedAt
+                });
             }
         }
-    });
+    
+        const reqs = Array.from(requestsMap.values());
+        return reqs;
+        }
+    
 
-    const fnames = users.map((user) => user.fname);
-    const lnames = users.map((user) => user.lname);
-    const Ids = users.map((user) => user.id);
+        
 
-    return [fnames,lnames,Ids,formId];
+    // const ids = pendingRequests.map((item) => {
+    //     return item.userId;
+    // });
+    // const formId=pendingRequests.map((item) => {
+    //     return item.formId;
+    // });
+
+    // const users = await this.prisma.user.findMany({
+    //     where: {
+    //         id: {
+    //             in: ids
+    //         }
+    //     }
+    // });
+
+    // const fnames = users.map((user) => user.fname);
+    // const lnames = users.map((user) => user.lname);
+    // const Ids = users.map((user) => user.id);
+
+    // return [fnames,lnames,Ids,formId];
 
 
     
-    }
+    // }
 
     //only admins can create forms
     //if the email is admin email, he can create forms-return true
