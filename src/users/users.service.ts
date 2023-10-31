@@ -178,17 +178,32 @@ export class UsersService {
                     }
                 }
             });
+            
             const forms=await this.prisma.forms.findMany({
                 where:{
-                    id:{
+                    orgId:{
                         in:res.map((item)=>{
+                            //console.log(item,'item');
                             return item.id
                         })
-                    }
-
+                        
+                    },
+                    
+                },
+                
+                
+            
+                
+            })
+            const finalRes=forms.map((item)=>{
+                return{
+                    title:item.title,
+                    description:item.description,
+                    data:item.data,
+                    org:res.find((orgItem)=>orgItem.id===item.orgId).orgname,
                 }
             })
-            return forms;
+            return finalRes;
         }
         // id:{
         //     in:forms.map((item) => {
