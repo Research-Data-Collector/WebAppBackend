@@ -8,6 +8,7 @@ import { LoginDto, ResetDataDto,ForgetPasswordDto } from 'src/auth/dto/login.dto
 
 import * as Brevo from '@getbrevo/brevo'; 
 import { upload } from 'src/utils/types';
+import { env } from 'node:process';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
   async sendOTPEmail(otp: string, email: string, name: string,end:string) {
     const defaultClient = Brevo.ApiClient.instance;
     const apiKey = defaultClient.authentications['api-key'];
-    apiKey.apiKey = ""
+    apiKey.apiKey = "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";
     const apiInstance = new Brevo.TransactionalEmailsApi();
     const sendSmtpEmail = new Brevo.SendSmtpEmail();
 
