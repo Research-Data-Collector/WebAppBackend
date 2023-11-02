@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Console } from 'console';
 import { CreateOrgDto } from 'src/auth/dto/register.dto';
 import { PrismaService } from 'src/prisma.service';
 import { AddMembers, AuthUser, CreateForms, RoleData, checkAdmin, checkForm, upload } from 'src/utils/types';
@@ -244,6 +245,7 @@ export class AdminService {
        //return [admin];
        
         const orgId=admin.orgId;
+        const userID=admin.id;
         const title=creatFormsData.title;
         //const adminId=admin.id;
         var data=creatFormsData.data;
@@ -253,7 +255,7 @@ export class AdminService {
        // return [orgId,creatFormsData.title,data,admin.email];
       // return [data];
 
-        await this.prisma.forms.create({
+        const form =await this.prisma.forms.create({
             data:{
                 title:title,
                 data:data,
@@ -261,10 +263,29 @@ export class AdminService {
                 description:description
             }
         });
+        
 
-        return {
-            message: 'Succefully created form',
-        }
+
+        //research owner should be added to the members table
+        //userId,orgId,formId,status
+
+    
+
+        const formId=form.id;
+        console.log(formId);
+
+        const teamMember=await this.prisma.teamMembers.create({
+            data:{
+                userId:userID,
+                orgId:orgId,
+                formId:formId,
+                status:true
+            }
+        });
+
+        return teamMember;
+
+
 
 
     }
