@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
+
+import { PrismaClient } from '@prisma/client';
 import { UserData } from 'src/utils/types';
 
 @Injectable()
@@ -7,11 +9,16 @@ export class UsersService {
     constructor(private prisma: PrismaService) {}
 
 
+
+    
+
+
     async createUser(userData:UserData): Promise<object> {
         // Implement Password Hashing.
 
         const result = await this.prisma.user.create({
-            data: userData
+            data: userData  
+        
         });
 
         return result;
@@ -42,7 +49,7 @@ export class UsersService {
         const users = await this.prisma.user.findMany({
             include:{
                 role: true,
-                org: true
+                //org: true
             }
         });
 

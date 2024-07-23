@@ -1,10 +1,11 @@
 export interface UserData {
     roleId: number;
-    orgId: number;
+    
     fname: string;
-    lname: string;
+    lname?: string|null;
     email: string;
     password: string;
+    orgId: number|null;
 }
 
 export interface OrganizationData {
@@ -14,3 +15,4 @@ export interface OrganizationData {
 export interface RoleData {
     name: string;
 }
+
