@@ -7,6 +7,7 @@ import { AdminModule } from 'src/admin/admin.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { ConfigModule } from '@nestjs/config';
+import { EmployerModule } from './employer/employer.module';
 
 
 
@@ -14,7 +15,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     UsersModule, AdminModule, AuthModule, FilesModule,ConfigModule.forRoot({
       isGlobal: true,
-    })
+    }), EmployerModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
